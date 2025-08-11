@@ -869,10 +869,10 @@ def run_bot():
             print(f"No trading signals detected in this scan.")
             # Print results in color instead of dumping the dict
             print(f"{Fore.CYAN}Bullish Condition Check Results:{Style.RESET_ALL}")
-            for tf in sorted(bullish_reasons.keys()):
+            for tf in bullish_reasons.keys():
                 print(bullish_reasons[tf])
             print(f"{Fore.CYAN}Bearish Condition Check Results:{Style.RESET_ALL}")
-            for tf in sorted(bearish_reasons.keys()):
+            for tf in bearish_reasons.keys():
                 print(bearish_reasons[tf])
 
         # Wait before the next scan
