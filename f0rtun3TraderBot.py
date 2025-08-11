@@ -135,228 +135,339 @@ def calculate_indicators(df):
     return df
 
 # --- Indicator Alignment Logic --- (Moved to global scope)
-def check_bullish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w):
-    """Checks for bullish alignment across indicators on multiple timeframes."""
-    if df_4h.empty or df_6h.empty or df_12h.empty or df_1d.empty or df_1w.empty:
-        return False, "Insufficient data for alignment check."
+# def check_bullish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w):
+    # """Checks for bullish alignment across indicators on multiple timeframes."""
+    # if df_4h.empty or df_6h.empty or df_12h.empty or df_1d.empty or df_1w.empty:
+    #     return False, "Insufficient data for alignment check."
 
-    # Get the latest values for each timeframe
-    latest_4h = df_4h.iloc[-1]
-    latest_6h = df_6h.iloc[-1]
-    latest_12h = df_12h.iloc[-1]
-    latest_1d = df_1d.iloc[-1]
-    latest_1w = df_1w.iloc[-1]
+    # # Get the latest values for each timeframe
+    # latest_4h = df_4h.iloc[-1]
+    # latest_6h = df_6h.iloc[-1]
+    # latest_12h = df_12h.iloc[-1]
+    # latest_1d = df_1d.iloc[-1]
+    # latest_1w = df_1w.iloc[-1]
 
-    # --- 4H Timeframe Bullish Conditions ---
-    # EMA Crossover: Short EMA above Long EMA
-    ema_4h_bullish = latest_4h['EMA_Short'] > latest_4h['EMA_Long']
-    # MACD: MACD Line above Signal Line and above zero
-    macd_4h_bullish = latest_4h['MACD_Line'] > latest_4h['MACD_Signal_Line'] and latest_4h['MACD_Line'] > 0
-    # Volume Oscillator: Positive (indicating buying pressure)
-    vol_osc_4h_bullish = latest_4h['Volume_Oscillator'] > 0
-    # SAR: Below current price (indicating uptrend)
-    sar_4h_bullish = latest_4h['SAR'] < latest_4h['close']
-    # RSI: Above 50 (indicating bullish momentum)
-    rsi_4h_bullish = latest_4h['RSI'] > 50
-    # Stochastic RSI: K and D lines rising and K above D, and not overbought
-    stoch_rsi_4h_bullish = (latest_4h['StochRSI_K'] > latest_4h['StochRSI_D'] and
-                            latest_4h['StochRSI_K'] < 80 and latest_4h['StochRSI_D'] < 80)
+    # # --- 4H Timeframe Bullish Conditions ---
+    # # EMA Crossover: Short EMA above Long EMA
+    # ema_4h_bullish = latest_4h['EMA_Short'] > latest_4h['EMA_Long']
+    # # MACD: MACD Line above Signal Line and above zero
+    # macd_4h_bullish = latest_4h['MACD_Line'] > latest_4h['MACD_Signal_Line'] and latest_4h['MACD_Line'] > 0
+    # # Volume Oscillator: Positive (indicating buying pressure)
+    # vol_osc_4h_bullish = latest_4h['Volume_Oscillator'] > 0
+    # # SAR: Below current price (indicating uptrend)
+    # sar_4h_bullish = latest_4h['SAR'] < latest_4h['close']
+    # # RSI: Above 50 (indicating bullish momentum)
+    # rsi_4h_bullish = latest_4h['RSI'] > 50
+    # # Stochastic RSI: K and D lines rising and K above D, and not overbought
+    # stoch_rsi_4h_bullish = (latest_4h['StochRSI_K'] > latest_4h['StochRSI_D'] and
+    #                         latest_4h['StochRSI_K'] < 80 and latest_4h['StochRSI_D'] < 80)
 
-    # --- 6H Timeframe Bullish Conditions ---
-    # EMA Crossover: Short EMA above Long EMA
-    ema_6h_bullish = latest_6h['EMA_Short'] > latest_6h['EMA_Long']
-    # MACD: MACD Line above Signal Line and above zero
-    macd_6h_bullish = latest_6h['MACD_Line'] > latest_6h['MACD_Signal_Line'] and latest_6h['MACD_Line'] > 0
-    # Volume Oscillator: Positive (indicating buying pressure)
-    vol_osc_6h_bullish = latest_6h['Volume_Oscillator'] > 0
-    # SAR: Below current price (indicating uptrend)
-    sar_6h_bullish = latest_6h['SAR'] < latest_6h['close']
-    # RSI: Above 50 (indicating bullish momentum)
-    rsi_6h_bullish = latest_6h['RSI'] > 50 # Corrected from latest_4h['RSI']
-    # Stochastic RSI: K and D lines rising and K above D, and not overbought
-    stoch_rsi_6h_bullish = (latest_6h['StochRSI_K'] > latest_6h['StochRSI_D'] and
-                            latest_6h['StochRSI_K'] < 80 and latest_6h['StochRSI_D'] < 80)
+    # # --- 6H Timeframe Bullish Conditions ---
+    # # EMA Crossover: Short EMA above Long EMA
+    # ema_6h_bullish = latest_6h['EMA_Short'] > latest_6h['EMA_Long']
+    # # MACD: MACD Line above Signal Line and above zero
+    # macd_6h_bullish = latest_6h['MACD_Line'] > latest_6h['MACD_Signal_Line'] and latest_6h['MACD_Line'] > 0
+    # # Volume Oscillator: Positive (indicating buying pressure)
+    # vol_osc_6h_bullish = latest_6h['Volume_Oscillator'] > 0
+    # # SAR: Below current price (indicating uptrend)
+    # sar_6h_bullish = latest_6h['SAR'] < latest_6h['close']
+    # # RSI: Above 50 (indicating bullish momentum)
+    # rsi_6h_bullish = latest_6h['RSI'] > 50 # Corrected from latest_4h['RSI']
+    # # Stochastic RSI: K and D lines rising and K above D, and not overbought
+    # stoch_rsi_6h_bullish = (latest_6h['StochRSI_K'] > latest_6h['StochRSI_D'] and
+    #                         latest_6h['StochRSI_K'] < 80 and latest_6h['StochRSI_D'] < 80)
 
-    # --- 12H Timeframe Bullish Conditions ---
-    # EMA Crossover: Short EMA above Long EMA
-    ema_12h_bullish = latest_12h['EMA_Short'] > latest_12h['EMA_Long']
-    # MACD: MACD Line above Signal Line and above zero
-    macd_12h_bullish = latest_12h['MACD_Line'] > latest_12h['MACD_Signal_Line'] and latest_12h['MACD_Line'] > 0
-    # Volume Oscillator: Positive (indicating buying pressure)
-    vol_osc_12h_bullish = latest_12h['Volume_Oscillator'] > 0
-    # SAR: Below current price (indicating uptrend)
-    sar_12h_bullish = latest_12h['SAR'] < latest_12h['close']
-    # RSI: Above 50 (indicating bullish momentum)
-    rsi_12h_bullish = latest_12h['RSI'] > 50
-    # Stochastic RSI: K and D lines rising and K above D, and not overbought
-    stoch_rsi_12h_bullish = (latest_12h['StochRSI_K'] > latest_12h['StochRSI_D'] and
-                            latest_12h['StochRSI_K'] < 80 and latest_12h['StochRSI_D'] < 80)
+    # # --- 12H Timeframe Bullish Conditions ---
+    # # EMA Crossover: Short EMA above Long EMA
+    # ema_12h_bullish = latest_12h['EMA_Short'] > latest_12h['EMA_Long']
+    # # MACD: MACD Line above Signal Line and above zero
+    # macd_12h_bullish = latest_12h['MACD_Line'] > latest_12h['MACD_Signal_Line'] and latest_12h['MACD_Line'] > 0
+    # # Volume Oscillator: Positive (indicating buying pressure)
+    # vol_osc_12h_bullish = latest_12h['Volume_Oscillator'] > 0
+    # # SAR: Below current price (indicating uptrend)
+    # sar_12h_bullish = latest_12h['SAR'] < latest_12h['close']
+    # # RSI: Above 50 (indicating bullish momentum)
+    # rsi_12h_bullish = latest_12h['RSI'] > 50
+    # # Stochastic RSI: K and D lines rising and K above D, and not overbought
+    # stoch_rsi_12h_bullish = (latest_12h['StochRSI_K'] > latest_12h['StochRSI_D'] and
+    #                         latest_12h['StochRSI_K'] < 80 and latest_12h['StochRSI_D'] < 80)
 
-    # --- 1D Timeframe Bullish Conditions (Confirmation) ---
-    ema_1d_bullish = latest_1d['EMA_Short'] > latest_1d['EMA_Long']
-    macd_1d_bullish = latest_1d['MACD_Line'] > latest_1d['MACD_Signal_Line'] and latest_1d['MACD_Line'] > 0
-    vol_osc_1d_bullish = latest_1d['Volume_Oscillator'] > 0
-    sar_1d_bullish = latest_1d['SAR'] < latest_1d['close']
-    rsi_1d_bullish = latest_1d['RSI'] > 50
-    stoch_rsi_1d_bullish = (latest_1d['StochRSI_K'] > latest_1d['StochRSI_D'] and
-                            latest_1d['StochRSI_K'] < 80 and latest_1d['StochRSI_D'] < 80)
+    # # --- 1D Timeframe Bullish Conditions (Confirmation) ---
+    # ema_1d_bullish = latest_1d['EMA_Short'] > latest_1d['EMA_Long']
+    # macd_1d_bullish = latest_1d['MACD_Line'] > latest_1d['MACD_Signal_Line'] and latest_1d['MACD_Line'] > 0
+    # vol_osc_1d_bullish = latest_1d['Volume_Oscillator'] > 0
+    # sar_1d_bullish = latest_1d['SAR'] < latest_1d['close']
+    # rsi_1d_bullish = latest_1d['RSI'] > 50
+    # stoch_rsi_1d_bullish = (latest_1d['StochRSI_K'] > latest_1d['StochRSI_D'] and
+    #                         latest_1d['StochRSI_K'] < 80 and latest_1d['StochRSI_D'] < 80)
 
-    # --- 1W Timeframe Bullish Conditions (Overall Trend) ---
-    ema_1w_bullish = latest_1w['EMA_Short'] > latest_1w['EMA_Long']
-    macd_1w_bullish = latest_1w['MACD_Line'] > latest_1w['MACD_Signal_Line'] and latest_1w['MACD_Line'] > 0
+    # # --- 1W Timeframe Bullish Conditions (Overall Trend) ---
+    # ema_1w_bullish = latest_1w['EMA_Short'] > latest_1w['EMA_Long']
+    # macd_1w_bullish = latest_1w['MACD_Line'] > latest_1w['MACD_Signal_Line'] and latest_1w['MACD_Line'] > 0
 
-    # Full Bullish Alignment
-    full_bullish_alignment = (
-        ema_4h_bullish and macd_4h_bullish and vol_osc_4h_bullish and sar_4h_bullish and rsi_4h_bullish and stoch_rsi_4h_bullish and
-        ema_6h_bullish and macd_6h_bullish and vol_osc_6h_bullish and sar_6h_bullish and rsi_6h_bullish and stoch_rsi_6h_bullish and # Added 6H
-        ema_12h_bullish and macd_12h_bullish and vol_osc_12h_bullish and sar_12h_bullish and rsi_12h_bullish and stoch_rsi_12h_bullish and # Added 12H
-        ema_1d_bullish and macd_1d_bullish and vol_osc_1d_bullish and sar_1d_bullish and rsi_1d_bullish and stoch_rsi_1d_bullish and
-        ema_1w_bullish and macd_1w_bullish
-    )
+    # # Full Bullish Alignment
+    # full_bullish_alignment = (
+    #     ema_4h_bullish and macd_4h_bullish and vol_osc_4h_bullish and sar_4h_bullish and rsi_4h_bullish and stoch_rsi_4h_bullish and
+    #     ema_6h_bullish and macd_6h_bullish and vol_osc_6h_bullish and sar_6h_bullish and rsi_6h_bullish and stoch_rsi_6h_bullish and # Added 6H
+    #     ema_12h_bullish and macd_12h_bullish and vol_osc_12h_bullish and sar_12h_bullish and rsi_12h_bullish and stoch_rsi_12h_bullish and # Added 12H
+    #     ema_1d_bullish and macd_1d_bullish and vol_osc_1d_bullish and sar_1d_bullish and rsi_1d_bullish and stoch_rsi_1d_bullish and
+    #     ema_1w_bullish and macd_1w_bullish
+    # )
 
-    reason = ""
-    if not full_bullish_alignment:
-        reason = "Bullish conditions not met: "
-        if not ema_4h_bullish: reason += "4H EMA, "
-        if not macd_4h_bullish: reason += "4H MACD, "
-        if not vol_osc_4h_bullish: reason += "4H Vol Osc, "
-        if not sar_4h_bullish: reason += "4H SAR, "
-        if not rsi_4h_bullish: reason += "4H RSI, "
-        if not stoch_rsi_4h_bullish: reason += "4H StochRSI, "
-        if not ema_6h_bullish: reason += "6H EMA, " # Added 6H
-        if not macd_6h_bullish: reason += "6H MACD, " # Added 6H
-        if not vol_osc_6h_bullish: reason += "6H Vol Osc, " # Added 6H
-        if not sar_6h_bullish: reason += "6H SAR, " # Added 6H
-        if not rsi_6h_bullish: reason += "6H RSI, " # Added 6H
-        if not stoch_rsi_6h_bullish: reason += "6H StochRSI, " # Added 6H
-        if not ema_12h_bullish: reason += "12H EMA, " # Added 12H
-        if not macd_12h_bullish: reason += "12H MACD, " # Added 12H
-        if not vol_osc_12h_bullish: reason += "12H Vol Osc, " # Added 12H
-        if not sar_12h_bullish: reason += "12H SAR, " # Added 12H
-        if not rsi_12h_bullish: reason += "12H RSI, " # Added 12H
-        if not stoch_rsi_12h_bullish: reason += "12H StochRSI, " # Added 12H
-        if not ema_1d_bullish: reason += "1D EMA, "
-        if not macd_1d_bullish: reason += "1D MACD, "
-        if not vol_osc_1d_bullish: reason += "1D Vol Osc, "
-        if not sar_1d_bullish: reason += "1D SAR, "
-        if not rsi_1d_bullish: reason += "1D RSI, "
-        if not stoch_rsi_1d_bullish: reason += "1D StochRSI, "
-        if not ema_1w_bullish: reason += "1W EMA, "
-        if not macd_1w_bullish: reason += "1W MACD, "
-        reason = reason.rstrip(', ') + "."
+    # reason = ""
+    # if not full_bullish_alignment:
+    #     reason = "Bullish conditions not met: "
+    #     if not ema_4h_bullish: reason += "4H EMA, "
+    #     if not macd_4h_bullish: reason += "4H MACD, "
+    #     if not vol_osc_4h_bullish: reason += "4H Vol Osc, "
+    #     if not sar_4h_bullish: reason += "4H SAR, "
+    #     if not rsi_4h_bullish: reason += "4H RSI, "
+    #     if not stoch_rsi_4h_bullish: reason += "4H StochRSI, "
+    #     if not ema_6h_bullish: reason += "6H EMA, " # Added 6H
+    #     if not macd_6h_bullish: reason += "6H MACD, " # Added 6H
+    #     if not vol_osc_6h_bullish: reason += "6H Vol Osc, " # Added 6H
+    #     if not sar_6h_bullish: reason += "6H SAR, " # Added 6H
+    #     if not rsi_6h_bullish: reason += "6H RSI, " # Added 6H
+    #     if not stoch_rsi_6h_bullish: reason += "6H StochRSI, " # Added 6H
+    #     if not ema_12h_bullish: reason += "12H EMA, " # Added 12H
+    #     if not macd_12h_bullish: reason += "12H MACD, " # Added 12H
+    #     if not vol_osc_12h_bullish: reason += "12H Vol Osc, " # Added 12H
+    #     if not sar_12h_bullish: reason += "12H SAR, " # Added 12H
+    #     if not rsi_12h_bullish: reason += "12H RSI, " # Added 12H
+    #     if not stoch_rsi_12h_bullish: reason += "12H StochRSI, " # Added 12H
+    #     if not ema_1d_bullish: reason += "1D EMA, "
+    #     if not macd_1d_bullish: reason += "1D MACD, "
+    #     if not vol_osc_1d_bullish: reason += "1D Vol Osc, "
+    #     if not sar_1d_bullish: reason += "1D SAR, "
+    #     if not rsi_1d_bullish: reason += "1D RSI, "
+    #     if not stoch_rsi_1d_bullish: reason += "1D StochRSI, "
+    #     if not ema_1w_bullish: reason += "1W EMA, "
+    #     if not macd_1w_bullish: reason += "1W MACD, "
+    #     reason = reason.rstrip(', ') + "."
 
-    return full_bullish_alignment, reason
+    # return full_bullish_alignment, reason
 
-def check_bearish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w): # Added df_6h, df_12h
-    """Checks for bearish alignment across indicators on multiple timeframes."""
-    if df_4h.empty or df_6h.empty or df_12h.empty or df_1d.empty or df_1w.empty:
-        return False, "Insufficient data for alignment check."
+def check_bullish_alignment(df_dict):
+    """
+    df_dict is a dictionary with keys as timeframes ('4h', '6h', etc.)
+    and values as the corresponding DataFrames.
+    Checks bullish signals for each timeframe independently and gives reasons.
+    """
+    bullish_results = {}
+    bullish_reasons = {}
 
-    latest_4h = df_4h.iloc[-1]
-    latest_6h = df_6h.iloc[-1]
-    latest_12h = df_12h.iloc[-1]
-    latest_1d = df_1d.iloc[-1]
-    latest_1w = df_1w.iloc[-1]
+    for tf, df in df_dict.items():
+        if df.empty:
+            bullish_results[tf] = False
+            bullish_reasons[tf] = f"{Fore.YELLOW}⚠ [{tf}] No data available.{Style.RESET_ALL}"
+            continue
 
-    # --- 4H Timeframe Bearish Conditions ---
-    # EMA Crossover: Short EMA below Long EMA
-    ema_4h_bearish = latest_4h['EMA_Short'] < latest_4h['EMA_Long']
-    # MACD: MACD Line below Signal Line and below zero
-    macd_4h_bearish = latest_4h['MACD_Line'] < latest_4h['MACD_Signal_Line'] and latest_4h['MACD_Line'] < 0
-    # Volume Oscillator: Negative (indicating selling pressure)
-    vol_osc_4h_bearish = latest_4h['Volume_Oscillator'] < 0
-    # SAR: Above current price (indicating downtrend)
-    sar_4h_bearish = latest_4h['SAR'] > latest_4h['close']
-    # RSI: Below 50 (indicating bearish momentum)
-    rsi_4h_bearish = latest_4h['RSI'] < 50
-    # Stochastic RSI: K and D lines falling and K below D, and not oversold
-    stoch_rsi_4h_bearish = (latest_4h['StochRSI_K'] < latest_4h['StochRSI_D'] and
-                            latest_4h['StochRSI_K'] > 20 and latest_4h['StochRSI_D'] > 20)
+        latest = df.iloc[-1]
 
-    # --- 6H Timeframe Bearish Conditions ---
-    # EMA Crossover: Short EMA below Long EMA
-    ema_6h_bearish = latest_6h['EMA_Short'] < latest_6h['EMA_Long']
-    # MACD: MACD Line below Signal Line and below zero
-    macd_6h_bearish = latest_6h['MACD_Line'] < latest_6h['MACD_Signal_Line'] and latest_6h['MACD_Line'] < 0
-    # Volume Oscillator: Negative (indicating selling pressure)
-    vol_osc_6h_bearish = latest_6h['Volume_Oscillator'] < 0
-    # SAR: Above current price (indicating downtrend)
-    sar_6h_bearish = latest_6h['SAR'] > latest_6h['close']
-    # RSI: Below 50 (indicating bearish momentum)
-    rsi_6h_bearish = latest_6h['RSI'] < 50
-    # Stochastic RSI: K and D lines falling and K below D, and not oversold
-    stoch_rsi_6h_bearish = (latest_6h['StochRSI_K'] < latest_6h['StochRSI_D'] and
-                            latest_6h['StochRSI_K'] > 20 and latest_6h['StochRSI_D'] > 20)
+        ema_bullish = latest['EMA_Short'] > latest['EMA_Long']
+        macd_bullish = latest['MACD_Line'] > latest['MACD_Signal_Line'] and latest['MACD_Line'] > 0
+        vol_osc_bullish = latest['Volume_Oscillator'] > 0
+        sar_bullish = latest['SAR'] < latest['close']
+        rsi_bullish = latest['RSI'] > 50
+        stoch_rsi_bullish = (
+            latest['StochRSI_K'] > latest['StochRSI_D'] and
+            latest['StochRSI_K'] < 80 and latest['StochRSI_D'] < 80
+        )
 
-    # --- 12H Timeframe Bearish Conditions ---
-    # EMA Crossover: Short EMA below Long EMA
-    ema_12h_bearish = latest_12h['EMA_Short'] < latest_12h['EMA_Long']
-    # MACD: MACD Line below Signal Line and below zero
-    macd_12h_bearish = latest_12h['MACD_Line'] < latest_12h['MACD_Signal_Line'] and latest_12h['MACD_Line'] < 0
-    # Volume Oscillator: Negative (indicating selling pressure)
-    vol_osc_12h_bearish = latest_12h['Volume_Oscillator'] < 0
-    # SAR: Above current price (indicating downtrend)
-    sar_12h_bearish = latest_12h['SAR'] > latest_12h['close']
-    # RSI: Below 50 (indicating bearish momentum)
-    rsi_12h_bearish = latest_12h['RSI'] < 50
-    # Stochastic RSI: K and D lines falling and K below D, and not oversold
-    stoch_rsi_12h_bearish = (latest_12h['StochRSI_K'] < latest_12h['StochRSI_D'] and
-                            latest_12h['StochRSI_K'] > 20 and latest_12h['StochRSI_D'] > 20)
+        all_bullish = all([
+            ema_bullish, macd_bullish, vol_osc_bullish,
+            sar_bullish, rsi_bullish, stoch_rsi_bullish
+        ])
+
+        bullish_results[tf] = all_bullish
+
+        if all_bullish:
+            bullish_reasons[tf] = f"{Fore.GREEN}🟢⬆️🔺 [{tf}] All bullish conditions met!{Style.RESET_ALL}"
+        else:
+            failed_conditions = []
+            if not ema_bullish: failed_conditions.append("EMA")
+            if not macd_bullish: failed_conditions.append("MACD")
+            if not vol_osc_bullish: failed_conditions.append("Volume Oscillator")
+            if not sar_bullish: failed_conditions.append("SAR")
+            if not rsi_bullish: failed_conditions.append("RSI")
+            if not stoch_rsi_bullish: failed_conditions.append("StochRSI")
+
+            failed_list = f"{Fore.RED}{', '.join(failed_conditions)}{Style.RESET_ALL}"
+
+            bullish_reasons[tf] = (
+                f"{Fore.YELLOW}⚠ [{tf}] Bullish conditions NOT met.{Style.RESET_ALL}\n"
+                f"{Fore.RED}Missing: {failed_list}{Style.RESET_ALL}"
+            )
+
+    return bullish_results, bullish_reasons
+
+
+# def check_bearish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w): # Added df_6h, df_12h
+#     """Checks for bearish alignment across indicators on multiple timeframes."""
+#     if df_4h.empty or df_6h.empty or df_12h.empty or df_1d.empty or df_1w.empty:
+#         return False, "Insufficient data for alignment check."
+
+#     latest_4h = df_4h.iloc[-1]
+#     latest_6h = df_6h.iloc[-1]
+#     latest_12h = df_12h.iloc[-1]
+#     latest_1d = df_1d.iloc[-1]
+#     latest_1w = df_1w.iloc[-1]
+
+#     # --- 4H Timeframe Bearish Conditions ---
+#     # EMA Crossover: Short EMA below Long EMA
+#     ema_4h_bearish = latest_4h['EMA_Short'] < latest_4h['EMA_Long']
+#     # MACD: MACD Line below Signal Line and below zero
+#     macd_4h_bearish = latest_4h['MACD_Line'] < latest_4h['MACD_Signal_Line'] and latest_4h['MACD_Line'] < 0
+#     # Volume Oscillator: Negative (indicating selling pressure)
+#     vol_osc_4h_bearish = latest_4h['Volume_Oscillator'] < 0
+#     # SAR: Above current price (indicating downtrend)
+#     sar_4h_bearish = latest_4h['SAR'] > latest_4h['close']
+#     # RSI: Below 50 (indicating bearish momentum)
+#     rsi_4h_bearish = latest_4h['RSI'] < 50
+#     # Stochastic RSI: K and D lines falling and K below D, and not oversold
+#     stoch_rsi_4h_bearish = (latest_4h['StochRSI_K'] < latest_4h['StochRSI_D'] and
+#                             latest_4h['StochRSI_K'] > 20 and latest_4h['StochRSI_D'] > 20)
+
+#     # --- 6H Timeframe Bearish Conditions ---
+#     # EMA Crossover: Short EMA below Long EMA
+#     ema_6h_bearish = latest_6h['EMA_Short'] < latest_6h['EMA_Long']
+#     # MACD: MACD Line below Signal Line and below zero
+#     macd_6h_bearish = latest_6h['MACD_Line'] < latest_6h['MACD_Signal_Line'] and latest_6h['MACD_Line'] < 0
+#     # Volume Oscillator: Negative (indicating selling pressure)
+#     vol_osc_6h_bearish = latest_6h['Volume_Oscillator'] < 0
+#     # SAR: Above current price (indicating downtrend)
+#     sar_6h_bearish = latest_6h['SAR'] > latest_6h['close']
+#     # RSI: Below 50 (indicating bearish momentum)
+#     rsi_6h_bearish = latest_6h['RSI'] < 50
+#     # Stochastic RSI: K and D lines falling and K below D, and not oversold
+#     stoch_rsi_6h_bearish = (latest_6h['StochRSI_K'] < latest_6h['StochRSI_D'] and
+#                             latest_6h['StochRSI_K'] > 20 and latest_6h['StochRSI_D'] > 20)
+
+#     # --- 12H Timeframe Bearish Conditions ---
+#     # EMA Crossover: Short EMA below Long EMA
+#     ema_12h_bearish = latest_12h['EMA_Short'] < latest_12h['EMA_Long']
+#     # MACD: MACD Line below Signal Line and below zero
+#     macd_12h_bearish = latest_12h['MACD_Line'] < latest_12h['MACD_Signal_Line'] and latest_12h['MACD_Line'] < 0
+#     # Volume Oscillator: Negative (indicating selling pressure)
+#     vol_osc_12h_bearish = latest_12h['Volume_Oscillator'] < 0
+#     # SAR: Above current price (indicating downtrend)
+#     sar_12h_bearish = latest_12h['SAR'] > latest_12h['close']
+#     # RSI: Below 50 (indicating bearish momentum)
+#     rsi_12h_bearish = latest_12h['RSI'] < 50
+#     # Stochastic RSI: K and D lines falling and K below D, and not oversold
+#     stoch_rsi_12h_bearish = (latest_12h['StochRSI_K'] < latest_12h['StochRSI_D'] and
+#                             latest_12h['StochRSI_K'] > 20 and latest_12h['StochRSI_D'] > 20)
     
-    # --- 1D Timeframe Bearish Conditions (Confirmation) ---
-    ema_1d_bearish = latest_1d['EMA_Short'] < latest_1d['EMA_Long']
-    macd_1d_bearish = latest_1d['MACD_Line'] < latest_1d['MACD_Signal_Line'] and latest_1d['MACD_Line'] < 0
-    vol_osc_1d_bearish = latest_1d['Volume_Oscillator'] < 0
-    sar_1d_bearish = latest_1d['SAR'] > latest_1d['close']
-    rsi_1d_bearish = latest_1d['RSI'] < 50
-    stoch_rsi_1d_bearish = (latest_1d['StochRSI_K'] < latest_1d['StochRSI_D'] and
-                            latest_1d['StochRSI_K'] > 20 and latest_1d['StochRSI_D'] > 20)
+#     # --- 1D Timeframe Bearish Conditions (Confirmation) ---
+#     ema_1d_bearish = latest_1d['EMA_Short'] < latest_1d['EMA_Long']
+#     macd_1d_bearish = latest_1d['MACD_Line'] < latest_1d['MACD_Signal_Line'] and latest_1d['MACD_Line'] < 0
+#     vol_osc_1d_bearish = latest_1d['Volume_Oscillator'] < 0
+#     sar_1d_bearish = latest_1d['SAR'] > latest_1d['close']
+#     rsi_1d_bearish = latest_1d['RSI'] < 50
+#     stoch_rsi_1d_bearish = (latest_1d['StochRSI_K'] < latest_1d['StochRSI_D'] and
+#                             latest_1d['StochRSI_K'] > 20 and latest_1d['StochRSI_D'] > 20)
 
-    # --- 1W Timeframe Bearish Conditions (Overall Trend) ---
-    ema_1w_bearish = latest_1w['EMA_Short'] < latest_1w['EMA_Long']
-    macd_1w_bearish = latest_1w['MACD_Line'] < latest_1w['MACD_Signal_Line'] and latest_1w['MACD_Line'] < 0
+#     # --- 1W Timeframe Bearish Conditions (Overall Trend) ---
+#     ema_1w_bearish = latest_1w['EMA_Short'] < latest_1w['EMA_Long']
+#     macd_1w_bearish = latest_1w['MACD_Line'] < latest_1w['MACD_Signal_Line'] and latest_1w['MACD_Line'] < 0
 
-    # Full Bearish Alignment
-    full_bearish_alignment = (
-        ema_4h_bearish and macd_4h_bearish and vol_osc_4h_bearish and sar_4h_bearish and rsi_4h_bearish and stoch_rsi_4h_bearish and
-        ema_6h_bearish and macd_6h_bearish and vol_osc_6h_bearish and sar_6h_bearish and rsi_6h_bearish and stoch_rsi_6h_bearish and # Added 6H
-        ema_12h_bearish and macd_12h_bearish and vol_osc_12h_bearish and sar_12h_bearish and rsi_12h_bearish and stoch_rsi_12h_bearish and # Added 12H
-        ema_1d_bearish and macd_1d_bearish and vol_osc_1d_bearish and sar_1d_bearish and rsi_1d_bearish and stoch_rsi_1d_bearish and
-        ema_1w_bearish and macd_1w_bearish
-    )
+#     # Full Bearish Alignment
+#     full_bearish_alignment = (
+#         ema_4h_bearish and macd_4h_bearish and vol_osc_4h_bearish and sar_4h_bearish and rsi_4h_bearish and stoch_rsi_4h_bearish and
+#         ema_6h_bearish and macd_6h_bearish and vol_osc_6h_bearish and sar_6h_bearish and rsi_6h_bearish and stoch_rsi_6h_bearish and # Added 6H
+#         ema_12h_bearish and macd_12h_bearish and vol_osc_12h_bearish and sar_12h_bearish and rsi_12h_bearish and stoch_rsi_12h_bearish and # Added 12H
+#         ema_1d_bearish and macd_1d_bearish and vol_osc_1d_bearish and sar_1d_bearish and rsi_1d_bearish and stoch_rsi_1d_bearish and
+#         ema_1w_bearish and macd_1w_bearish
+#     )
 
-    reason = ""
-    if not full_bearish_alignment:
-        reason = "Bearish conditions not met: "
-        if not ema_4h_bearish: reason += "4H EMA, "
-        if not macd_4h_bearish: reason += "4H MACD, "
-        if not vol_osc_4h_bearish: reason += "4H Vol Osc, "
-        if not sar_4h_bearish: reason += "4H SAR, "
-        if not rsi_4h_bearish: reason += "4H RSI, "
-        if not stoch_rsi_4h_bearish: reason += "4H StochRSI, "
-        if not ema_6h_bearish: reason += "6H EMA, " # Added 6H
-        if not macd_6h_bearish: reason += "6H MACD, " # Added 6H
-        if not vol_osc_6h_bearish: reason += "6H Vol Osc, " # Added 6H
-        if not sar_6h_bearish: reason += "6H SAR, " # Added 6H
-        if not rsi_6h_bearish: reason += "6H RSI, " # Added 6H
-        if not stoch_rsi_6h_bearish: reason += "6H StochRSI, " # Added 6H
-        if not ema_12h_bearish: reason += "12H EMA, " # Added 12H
-        if not macd_12h_bearish: reason += "12H MACD, " # Added 12H
-        if not vol_osc_12h_bearish: reason += "12H Vol Osc, " # Added 12H
-        if not sar_12h_bearish: reason += "12H SAR, " # Added 12H
-        if not rsi_12h_bearish: reason += "12H RSI, " # Added 12H
-        if not stoch_rsi_12h_bearish: reason += "12H StochRSI, " # Added 12H
-        if not ema_1d_bearish: reason += "1D EMA, "
-        if not macd_1d_bearish: reason += "1D MACD, "
-        if not vol_osc_1d_bearish: reason += "1D Vol Osc, "
-        if not sar_1d_bearish: reason += "1D SAR, "
-        if not rsi_1d_bearish: reason += "1D RSI, "
-        if not stoch_rsi_1d_bearish: reason += "1D StochRSI, "
-        if not ema_1w_bearish: reason += "1W EMA, "
-        if not macd_1w_bearish: reason += "1W MACD, "
-        reason = reason.rstrip(', ') + "."
+#     reason = ""
+#     if not full_bearish_alignment:
+#         reason = "Bearish conditions not met: "
+#         if not ema_4h_bearish: reason += "4H EMA, "
+#         if not macd_4h_bearish: reason += "4H MACD, "
+#         if not vol_osc_4h_bearish: reason += "4H Vol Osc, "
+#         if not sar_4h_bearish: reason += "4H SAR, "
+#         if not rsi_4h_bearish: reason += "4H RSI, "
+#         if not stoch_rsi_4h_bearish: reason += "4H StochRSI, "
+#         if not ema_6h_bearish: reason += "6H EMA, " # Added 6H
+#         if not macd_6h_bearish: reason += "6H MACD, " # Added 6H
+#         if not vol_osc_6h_bearish: reason += "6H Vol Osc, " # Added 6H
+#         if not sar_6h_bearish: reason += "6H SAR, " # Added 6H
+#         if not rsi_6h_bearish: reason += "6H RSI, " # Added 6H
+#         if not stoch_rsi_6h_bearish: reason += "6H StochRSI, " # Added 6H
+#         if not ema_12h_bearish: reason += "12H EMA, " # Added 12H
+#         if not macd_12h_bearish: reason += "12H MACD, " # Added 12H
+#         if not vol_osc_12h_bearish: reason += "12H Vol Osc, " # Added 12H
+#         if not sar_12h_bearish: reason += "12H SAR, " # Added 12H
+#         if not rsi_12h_bearish: reason += "12H RSI, " # Added 12H
+#         if not stoch_rsi_12h_bearish: reason += "12H StochRSI, " # Added 12H
+#         if not ema_1d_bearish: reason += "1D EMA, "
+#         if not macd_1d_bearish: reason += "1D MACD, "
+#         if not vol_osc_1d_bearish: reason += "1D Vol Osc, "
+#         if not sar_1d_bearish: reason += "1D SAR, "
+#         if not rsi_1d_bearish: reason += "1D RSI, "
+#         if not stoch_rsi_1d_bearish: reason += "1D StochRSI, "
+#         if not ema_1w_bearish: reason += "1W EMA, "
+#         if not macd_1w_bearish: reason += "1W MACD, "
+#         reason = reason.rstrip(', ') + "."
 
-    return full_bearish_alignment, reason
+#     return full_bearish_alignment, reason
+
+def check_bearish_alignment(df_dict):
+    """
+    df_dict is a dictionary with keys as timeframes ('4h', '6h', etc.)
+    and values as the corresponding DataFrames.
+    Checks bearish signals for each timeframe independently and gives reasons.
+    """
+    bearish_results = {}
+    bearish_reasons = {}
+
+    for tf, df in df_dict.items():
+        if df.empty:
+            bearish_results[tf] = False
+            bearish_reasons[tf] = "No data"
+            continue
+
+        latest = df.iloc[-1]
+
+        ema_bearish = latest['EMA_Short'] < latest['EMA_Long']
+        macd_bearish = latest['MACD_Line'] < latest['MACD_Signal_Line'] and latest['MACD_Line'] < 0
+        vol_osc_bearish = latest['Volume_Oscillator'] < 0
+        sar_bearish = latest['SAR'] > latest['close']
+        rsi_bearish = latest['RSI'] < 50
+        stoch_rsi_bearish = (
+            latest['StochRSI_K'] < latest['StochRSI_D'] and
+            latest['StochRSI_K'] > 20 and latest['StochRSI_D'] > 20
+        )
+
+        all_bearish = all([
+            ema_bearish, macd_bearish, vol_osc_bearish,
+            sar_bearish, rsi_bearish, stoch_rsi_bearish
+        ])
+
+        bearish_results[tf] = all_bearish
+
+        if all_bearish:
+            bearish_reasons[tf] = f"{Fore.RED}🔴⬇️🔻 [{tf}] All bearish conditions met!{Style.RESET_ALL}"
+        else:
+            failed_conditions = []
+            if not ema_bearish: failed_conditions.append("EMA")
+            if not macd_bearish: failed_conditions.append("MACD")
+            if not vol_osc_bearish: failed_conditions.append("Volume Oscillator")
+            if not sar_bearish: failed_conditions.append("SAR")
+            if not rsi_bearish: failed_conditions.append("RSI")
+            if not stoch_rsi_bearish: failed_conditions.append("StochRSI")
+
+            failed_list = f"{Fore.GREEN}" + ", ".join(failed_conditions) + f"{Style.RESET_ALL}"
+
+            bearish_reasons[tf] = (
+                f"{Fore.YELLOW}⚠ [{tf}] Bearish conditions NOT met.\n"
+                f"{Fore.GREEN}Missing: {failed_list}{Style.RESET_ALL}"
+            )
+
+    return bearish_results, bearish_reasons
+
+
 
 # --- Chart Pattern Monitoring (Simplified Example) ---
 def detect_chart_patterns(df):
@@ -536,6 +647,128 @@ def monitor_and_exit_trades(open_positions, df_1h_indicators, df_4h_indicators):
             close_trade(position_ticket)
 
 # --- Main Bot Logic ---
+# def run_bot():
+    # """Main function to run the trading bot."""
+    # if not initialize_mt5():
+    #     return
+
+    # # Check if the symbol is available
+    # symbol_info = mt5.symbol_info(SYMBOL)
+    # if symbol_info is None:
+    #     print(f"{SYMBOL} not found, please check the symbol name.")
+    #     send_telegram_message(f"Bot Alert: {SYMBOL} not found. Exiting.")
+    #     shutdown_mt5()
+    #     return
+
+    # if not symbol_info.visible:
+    #     print(f"{SYMBOL} is not visible in MarketWatch, trying to select it.")
+    #     if not mt5.symbol_select(SYMBOL, True):
+    #         print(f"symbol_select({SYMBOL}) failed, exit")
+    #         send_telegram_message(f"Bot Alert: Failed to make {SYMBOL} visible. Exiting.")
+    #         shutdown_mt5()
+    #         return
+
+    # # Get account info
+    # account_info = mt5.account_info()
+    # if account_info is None:
+    #     print(f"Failed to get account info: {mt5.last_error()}")
+    #     send_telegram_message(f"Bot Alert: Failed to get account info. Exiting.")
+    #     shutdown_mt5()
+    #     return
+    # print(f"Account: {account_info.login}, Balance: {account_info.balance:.2f} {account_info.currency}")
+    # send_telegram_message(f"Bot started! Account: {account_info.login}, Balance: {account_info.balance:.2f} {account_info.currency}")
+
+    # # Main loop
+    # while True:
+    #     print(f"\n--- Scanning at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+
+    #     # Fetch data for all timeframes
+    #     data_frames = {}
+    #     for tf_name, tf_value in TIMEFRAMES.items():
+    #         df = get_ohlc_data(SYMBOL, tf_value, bars=200) # Fetch enough bars for indicators
+    #         if not df.empty:
+    #             data_frames[tf_name] = calculate_indicators(df)
+    #             print(f"Fetched and calculated indicators for {tf_name}. Latest close: {data_frames[tf_name]['close'].iloc[-1]}")
+    #         else:
+    #             print(f"Could not get data for {tf_name}. Skipping alignment check for this timeframe.")
+    #             data_frames[tf_name] = pd.DataFrame() # Ensure it's an empty DataFrame
+
+    #     df_dict = data_frames
+
+    #     # Check for trading signals
+    #     bullish_signal, bullish_reason = check_bullish_alignment(df_dict) # Pass all required DFs
+    #     bearish_signal, bearish_reason = check_bearish_alignment(df_dict) # Pass all required DFs
+
+    #     # Get current open positions
+    #     open_positions = mt5.positions_get(symbol=SYMBOL)
+
+    #     if bullish_signal and not open_positions:
+    #         print(f"BULLISH SIGNAL DETECTED! Reason: {bullish_reason}")
+    #         send_telegram_message(f"BULLISH SIGNAL DETECTED for {SYMBOL}! Reason: {bullish_reason}")
+
+    #         # Optional: Reinforce with chart patterns (using 4H for entry confidence)
+    #         pattern = detect_chart_patterns(df_4h)
+    #         if pattern and "Bullish" in pattern:
+    #             print(f"Chart pattern reinforcement: {pattern}")
+    #             send_telegram_message(f"Chart pattern reinforcement: {pattern}")
+                
+    #             current_price = mt5.symbol_info_tick(SYMBOL).ask
+    #             if not df_4h.empty:
+    #                 atr_value = df_4h['ATR'].iloc[-1]
+    #                 sl, tp = calculate_sl_tp(current_price, atr_value, "BUY")
+    #                 if sl is not None and tp is not None:
+    #                     open_trade(SYMBOL, "BUY", LOT_SIZE, sl, tp)
+    #                 else:
+    #                     print("Could not calculate SL/TP.")
+    #             else:
+    #                 print("4H data not available for ATR calculation.")
+    #         elif not pattern:
+    #             print("No reinforcing bullish chart pattern detected.")
+    #         else:
+    #             print(f"Conflicting chart pattern detected: {pattern}. Skipping trade.")
+
+
+    #     elif bearish_signal and not open_positions:
+    #         print(f"BEARISH SIGNAL DETECTED! Reason: {bearish_reason}")
+    #         send_telegram_message(f"BEARISH SIGNAL DETECTED for {SYMBOL}! Reason: {bearish_reason}")
+
+    #         # Optional: Reinforce with chart patterns (using 4H for entry confidence)
+    #         pattern = detect_chart_patterns(df_4h)
+    #         if pattern and "Bearish" in pattern:
+    #             print(f"Chart pattern reinforcement: {pattern}")
+    #             send_telegram_message(f"Chart pattern reinforcement: {pattern}")
+
+    #             current_price = mt5.symbol_info_tick(SYMBOL).bid
+    #             if not df_4h.empty:
+    #                 atr_value = df_4h['ATR'].iloc[-1]
+    #                 sl, tp = calculate_sl_tp(current_price, atr_value, "SELL")
+    #                 if sl is not None and tp is not None:
+    #                     open_trade(SYMBOL, "SELL", LOT_SIZE, sl, tp)
+    #                 else:
+    #                     print("Could not calculate SL/TP.")
+    #             else:
+    #                 print("4H data not available for ATR calculation.")
+    #         elif not pattern:
+    #             print("No reinforcing bearish chart pattern detected.")
+    #         else:
+    #             print(f"Conflicting chart pattern detected: {pattern}. Skipping trade.")
+
+    #     elif open_positions:
+    #         print(f"Currently have {len(open_positions)} open position(s). Monitoring for exits.")
+    #         # Fetch 1H data for exit monitoring
+    #         df_1h_exit = get_ohlc_data(SYMBOL, mt5.TIMEFRAME_H1, bars=50)
+    #         # Pass the already calculated 4H indicators for exit monitoring
+    #         monitor_and_exit_trades(open_positions, calculate_indicators(df_1h_exit.copy()), df_4h) # Pass 4H data as well
+
+    #     else:
+    #         print(f"No trading signals detected. {bullish_reason} | {bearish_reason}")
+
+
+    #     # Wait for a defined interval before the next scan
+    #     # For a 4H bot, you might check every hour or every 30 minutes.
+    #     # For demonstration, we'll use a shorter interval.
+    #     time.sleep(300) # Check every 5 minutes (300 seconds)
+
 def run_bot():
     """Main function to run the trading bot."""
     if not initialize_mt5():
@@ -564,6 +797,7 @@ def run_bot():
         send_telegram_message(f"Bot Alert: Failed to get account info. Exiting.")
         shutdown_mt5()
         return
+
     print(f"Account: {account_info.login}, Balance: {account_info.balance:.2f} {account_info.currency}")
     send_telegram_message(f"Bot started! Account: {account_info.login}, Balance: {account_info.balance:.2f} {account_info.currency}")
 
@@ -574,93 +808,76 @@ def run_bot():
         # Fetch data for all timeframes
         data_frames = {}
         for tf_name, tf_value in TIMEFRAMES.items():
-            df = get_ohlc_data(SYMBOL, tf_value, bars=200) # Fetch enough bars for indicators
+            df = get_ohlc_data(SYMBOL, tf_value, bars=200)
             if not df.empty:
                 data_frames[tf_name] = calculate_indicators(df)
                 print(f"Fetched and calculated indicators for {tf_name}. Latest close: {data_frames[tf_name]['close'].iloc[-1]}")
             else:
-                print(f"Could not get data for {tf_name}. Skipping alignment check for this timeframe.")
-                data_frames[tf_name] = pd.DataFrame() # Ensure it's an empty DataFrame
+                print(f"Could not get data for {tf_name}. Skipping signal check.")
+                data_frames[tf_name] = pd.DataFrame()
 
-        df_4h = data_frames.get("4H", pd.DataFrame())
-        df_6h = data_frames.get("6H", pd.DataFrame()) # Retrieve 6H data
-        df_12h = data_frames.get("12H", pd.DataFrame()) # Retrieve 12H data
-        df_1d = data_frames.get("1D", pd.DataFrame())
-        df_1w = data_frames.get("1W", pd.DataFrame())
+        df_dict = data_frames
+        df_4h = df_dict.get('4h', pd.DataFrame())
 
         # Check for trading signals
-        bullish_signal, bullish_reason = check_bullish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w) # Pass all required DFs
-        bearish_signal, bearish_reason = check_bearish_alignment(df_4h, df_6h, df_12h, df_1d, df_1w) # Pass all required DFs
+        bullish_results, bullish_reasons = check_bullish_alignment(df_dict)
+        bearish_results, bearish_reasons = check_bearish_alignment(df_dict)
 
         # Get current open positions
-        open_positions = mt5.positions_get(symbol=SYMBOL)
+        open_positions = mt5.positions_get(symbol=SYMBOL) or []
 
-        if bullish_signal and not open_positions:
-            print(f"BULLISH SIGNAL DETECTED! Reason: {bullish_reason}")
-            send_telegram_message(f"BULLISH SIGNAL DETECTED for {SYMBOL}! Reason: {bullish_reason}")
+        # ✅ Independent signal sending per timeframe
+        for tf in TIMEFRAMES.keys():
+            # Bullish signal
+            if bullish_results.get(tf) and not open_positions:
+                print(f"📈 Bullish signal detected on {tf} timeframe! Reason: {bullish_reasons.get(tf, 'N/A')}")
+                send_telegram_message(f"📈 Bullish signal detected for {SYMBOL} on {tf} timeframe! {bullish_reasons.get(tf, '')}")
 
-            # Optional: Reinforce with chart patterns (using 4H for entry confidence)
-            pattern = detect_chart_patterns(df_4h)
-            if pattern and "Bullish" in pattern:
-                print(f"Chart pattern reinforcement: {pattern}")
-                send_telegram_message(f"Chart pattern reinforcement: {pattern}")
-                
-                current_price = mt5.symbol_info_tick(SYMBOL).ask
-                if not df_4h.empty:
-                    atr_value = df_4h['ATR'].iloc[-1]
-                    sl, tp = calculate_sl_tp(current_price, atr_value, "BUY")
-                    if sl is not None and tp is not None:
-                        open_trade(SYMBOL, "BUY", LOT_SIZE, sl, tp)
-                    else:
-                        print("Could not calculate SL/TP.")
-                else:
-                    print("4H data not available for ATR calculation.")
-            elif not pattern:
-                print("No reinforcing bullish chart pattern detected.")
-            else:
-                print(f"Conflicting chart pattern detected: {pattern}. Skipping trade.")
+                if tf == '4h':
+                    pattern = detect_chart_patterns(df_4h)
+                    if pattern and "Bullish" in pattern:
+                        send_telegram_message(f"Chart pattern reinforcement: {pattern}")
+                    current_price = mt5.symbol_info_tick(SYMBOL).ask
+                    if not df_4h.empty:
+                        atr_value = df_4h['ATR'].iloc[-1]
+                        sl, tp = calculate_sl_tp(current_price, atr_value, "BUY")
+                        if sl and tp:
+                            open_trade(SYMBOL, "BUY", LOT_SIZE, sl, tp)
 
+            # Bearish signal
+            elif bearish_results.get(tf) and not open_positions:
+                print(f"📉 Bearish signal detected on {tf} timeframe! Reason: {bearish_reasons.get(tf, 'N/A')}")
+                send_telegram_message(f"📉 Bearish signal detected for {SYMBOL} on {tf} timeframe! {bearish_reasons.get(tf, '')}")
 
-        elif bearish_signal and not open_positions:
-            print(f"BEARISH SIGNAL DETECTED! Reason: {bearish_reason}")
-            send_telegram_message(f"BEARISH SIGNAL DETECTED for {SYMBOL}! Reason: {bearish_reason}")
+                if tf == '4h':
+                    pattern = detect_chart_patterns(df_4h)
+                    if pattern and "Bearish" in pattern:
+                        send_telegram_message(f"Chart pattern reinforcement: {pattern}")
+                    current_price = mt5.symbol_info_tick(SYMBOL).bid
+                    if not df_4h.empty:
+                        atr_value = df_4h['ATR'].iloc[-1]
+                        sl, tp = calculate_sl_tp(current_price, atr_value, "SELL")
+                        if sl and tp:
+                            open_trade(SYMBOL, "SELL", LOT_SIZE, sl, tp)
 
-            # Optional: Reinforce with chart patterns (using 4H for entry confidence)
-            pattern = detect_chart_patterns(df_4h)
-            if pattern and "Bearish" in pattern:
-                print(f"Chart pattern reinforcement: {pattern}")
-                send_telegram_message(f"Chart pattern reinforcement: {pattern}")
-
-                current_price = mt5.symbol_info_tick(SYMBOL).bid
-                if not df_4h.empty:
-                    atr_value = df_4h['ATR'].iloc[-1]
-                    sl, tp = calculate_sl_tp(current_price, atr_value, "SELL")
-                    if sl is not None and tp is not None:
-                        open_trade(SYMBOL, "SELL", LOT_SIZE, sl, tp)
-                    else:
-                        print("Could not calculate SL/TP.")
-                else:
-                    print("4H data not available for ATR calculation.")
-            elif not pattern:
-                print("No reinforcing bearish chart pattern detected.")
-            else:
-                print(f"Conflicting chart pattern detected: {pattern}. Skipping trade.")
-
-        elif open_positions:
+        # Monitor open positions
+        if open_positions:
             print(f"Currently have {len(open_positions)} open position(s). Monitoring for exits.")
-            # Fetch 1H data for exit monitoring
             df_1h_exit = get_ohlc_data(SYMBOL, mt5.TIMEFRAME_H1, bars=50)
-            # Pass the already calculated 4H indicators for exit monitoring
-            monitor_and_exit_trades(open_positions, calculate_indicators(df_1h_exit.copy()), df_4h) # Pass 4H data as well
-
+            monitor_and_exit_trades(open_positions, calculate_indicators(df_1h_exit.copy()), df_4h)
         else:
-            print(f"No trading signals detected. {bullish_reason} | {bearish_reason}")
+            print(f"No trading signals detected in this scan.")
+            # Print results in color instead of dumping the dict
+            print(f"{Fore.CYAN}Bullish Condition Check Results:{Style.RESET_ALL}")
+            for tf in sorted(bullish_reasons.keys()):
+                print(bullish_reasons[tf])
+            print(f"{Fore.CYAN}Bearish Condition Check Results:{Style.RESET_ALL}")
+            for tf in sorted(bearish_reasons.keys()):
+                print(bearish_reasons[tf])
 
+        # Wait before the next scan
+        time.sleep(300)
 
-        # Wait for a defined interval before the next scan
-        # For a 4H bot, you might check every hour or every 30 minutes.
-        # For demonstration, we'll use a shorter interval.
-        time.sleep(300) # Check every 5 minutes (300 seconds)
 
 # --- Run the Bot ---
 if __name__ == "__main__":
